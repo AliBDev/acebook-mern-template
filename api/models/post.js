@@ -3,10 +3,11 @@ const mongoose = require("mongoose");
 const PostSchema = new mongoose.Schema({
   message: String,
   date: { type: Date, default: Date.now },
-    url: {
-      work: mongoose.SchemaTypes.Url,
-      profile: mongoose.SchemaTypes.Url
-    }
+});
+
+const imageSchema = new mongoose.Schema({
+  url: String,
+  data: Buffer,
 });
 
 const Post = mongoose.model("Post", PostSchema);
