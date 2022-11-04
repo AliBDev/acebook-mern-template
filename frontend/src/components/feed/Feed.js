@@ -7,11 +7,7 @@ const Feed = ({ navigate }) => {
   const [post, setPost] = useState([]);
 
   const getPosts = () => {
-    console.log('is there a token?')
-    console.log(token)
     if(token) {
-      console.log('fetch request now:')
-      console.log(token)
       fetch("/posts", {
         headers: {
           'Authorization': `Bearer ${token}`
