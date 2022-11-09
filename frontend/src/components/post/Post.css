@@ -2,6 +2,13 @@
   background: #fdfdfd;
 }
 
+.single-post-container{
+  padding: 5%;
+  border: 2px solid rgb(190, 190, 190);
+  border-radius: 8px;
+  margin-bottom:20px;
+}
+
 .profile-picture-container img{
   border-style: solid;
   border-color: rgb(255, 255, 255);
