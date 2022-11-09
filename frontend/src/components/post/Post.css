@@ -1,3 +1,25 @@
 #post-page {
   background: #fdfdfd;
 }
+
+.profile-picture-container img{
+  border-style: solid;
+  border-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  max-width: 20%;
+  /* float: left; */
+}
+
+/* const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
+  },
+  logo: {
+    width: 66,
+    height: 58,
+  },
+}); */

@@ -106,7 +106,7 @@ const Feed = ({ navigate }) => {
                 setImageFile(event.target.files[0]);
               }}
             />
-            <button onClick={handleSubmit}> Post.</button>
+            <button id="submit" onClick={handleSubmit}>Post.</button>
           </h3>
 
           <div id="feed" role="feed">
