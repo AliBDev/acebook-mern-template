@@ -18,6 +18,7 @@ const SessionsController = {
         const token = await TokenGenerator.jsonwebtoken(user.id)
         res.status(201).json({ token: token, message: "OK" });
       }
+      
     });
   }
 };
