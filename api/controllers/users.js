@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const JWT = require("jsonwebtoken");
+const TokenGenerator = require("../models/token_generator");
 
 const UsersController = {
   Create: (req, res) => {
@@ -11,6 +13,17 @@ const UsersController = {
       }
     });
   },
+
+  Fetch: (req, res) => {
+    User.findOne( { "_id": req.user_id }, (err, user) => {
+      console.log(user)
+      if (err) {
+        throw err;
+      }
+      const token = TokenGenerator.jsonwebtoken(req.user_id)
+      res.status(200).json({ user: user, token: token });
+    }
+ )}
 };
 
 module.exports = UsersController;

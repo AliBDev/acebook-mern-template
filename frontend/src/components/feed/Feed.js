@@ -6,29 +6,30 @@ import { v4 } from "uuid";
 import NavBar from "../app/navbar";
 import "./Feed.css";
 
+
 const Feed = ({ navigate }) => {
   const [posts, setPosts] = useState([]);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const [post, setPost] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const logout = () => {
-    window.localStorage.removeItem("token");
-    navigate("/signup");
-  };
-
-  const [imageList, setImageList] = useState([]);
-  const imageListRef = ref(storage, `images/profilepic/defaultprofilepics/`);
-
-  useEffect(() => {
-    listAll(imageListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setImageList([url]);
+  const getUser = () => {
+    if (token) {
+      fetch("/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          window.localStorage.setItem("token", data.token);
+          setToken(window.localStorage.getItem("token"));
+          setUser(data.user);
+          console.log(user)
         });
-      });
-    });
-  });
+    }
+  }
 
   const getPosts = () => {
     if (token) {
@@ -47,6 +48,7 @@ const Feed = ({ navigate }) => {
   };
 
   useEffect(() => {
+    getUser();
     getPosts();
   }, []);
 
@@ -143,13 +145,9 @@ const Feed = ({ navigate }) => {
           <div className="main-content">
             <div className="write-post-container">
               <div className="user-profile">
-                {imageList.map((url) => {
-                  return (
-                    <img className="nav-icon-img" src={url} alt="ProfilePic" />
-                  );
-                })}
+              <img src={user.img} />
                 <div>
-                  <p>Username placeholder</p>
+                  <p>{user.name}</p>
                   <small>Public</small>
                 </div>
               </div>
@@ -169,12 +167,12 @@ const Feed = ({ navigate }) => {
                       Live Video
                     </a>
                     <a href="#">
-                      <input
+                      {/* <input
                         type="file"
                         onChange={(event) => {
                           setImageFile(event.target.files[0]);
                         }}
-                      />
+                      /> */}
                       Photos
                     </a>
                     <a href="#">
@@ -182,12 +180,12 @@ const Feed = ({ navigate }) => {
                       Feeling/Activity
                     </a>
                   </div>
-                  {/* <input
+                  <input
                     type="file"
                     onChange={(event) => {
                       setImageFile(event.target.files[0]);
                     }}
-                  /> */}
+                  />
                   <button id="submit" onClick={handleSubmit}>
                     {" "}
                     Post
@@ -196,17 +194,12 @@ const Feed = ({ navigate }) => {
               </div>
             </div>
             <div className="post-container">
-              {/* <div className="user-profile">
-                {imageList.map((url) => {
-                  return (
-                    <img className="nav-icon-img" src={url} alt="ProfilePic" />
-                  );
-                })}
+              <div className="user-profile">
+                {/* author photo */}
                 <div>
-                  <p>Username Placeholder</p>
                   <span></span>
                 </div>
-              </div> */}
+              </div>
               <div id="feed" role="feed">
                 {posts.map((post) => (
                   <Post post={post} key={post._id} />

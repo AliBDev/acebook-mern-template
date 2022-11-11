@@ -3,13 +3,8 @@ import LoginPage, { LoginForm } from "../auth/LoginPage";
 import { storage } from "../app/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-import NavBar from "../app/navbar";
 
 const SignUpPage = ({ navigate }) => {
-  const logout = () => {
-    window.localStorage.removeItem("token");
-    navigate("/signup");
-  };
 
   const toggleEl = () => {
     document.querySelector(".cont").classList.toggle("s--signup");
@@ -17,7 +12,6 @@ const SignUpPage = ({ navigate }) => {
 
   return (
     <>
-    {/* <NavBar/> */}
     <div id="container">
       <div id="post-page">
       </div>
@@ -57,10 +51,9 @@ export const SignUpForm = ({ navigate, toggleEl }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [imageUpload, setimageUpload] = useState(null);
+  const [imageFile, setimageFile] = useState(null);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const sendUser = (url) => {
 
     fetch("/users", {
       method: "post",
@@ -71,10 +64,11 @@ export const SignUpForm = ({ navigate, toggleEl }) => {
         name: name,
         email: email,
         password: password,
+        img: url,
       }),
     }).then((response) => {
       if (response.status !== 201) {
-        navigate("/signup");
+        // navigate("/signup");
       } else {
         toggleEl();
       }
@@ -94,11 +88,19 @@ export const SignUpForm = ({ navigate, toggleEl }) => {
   };
 
   const uploadImage = () => {
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/profilepic/${imageUpload.name + v4()}`);
-    uploadBytes(imageRef, imageUpload).then(() =>
+    if (imageFile == null) return;
+    const imageRef = ref(storage, `images/profilepic/${imageFile.name + v4()}`);
+    uploadBytes(imageRef, imageFile).then(() =>
       alert("Image Uploaded")
     );
+  };
+
+  const handleSubmit = () => {
+    if (imageFile) {
+      uploadImage().then(sendUser);
+    } else {
+      sendUser();
+    }
   };
 
   return (
@@ -137,17 +139,17 @@ export const SignUpForm = ({ navigate, toggleEl }) => {
             multiple
             size="50"
             onChange={(event) => {
-                setimageUpload(event.target.files[0]);
+                setimageFile(event.target.files[0]);
               }}
           />
         </label>
       </form>
       <button
-        id="submit"
+        id="submit-signup"
         type="submit"
         className="submit"
         value="Submit"
-        onClick={uploadImage}
+        onClick={handleSubmit}
       >
         Sign Up
       </button>
